@@ -48,6 +48,7 @@ class _SplashPageState extends State<SplashPage>
 
   void _setup() async {
     await _controller.forward();
+    await Future.delayed(const Duration(seconds: 1));
     _helper.moveToPage(_model.context!, page: const DevPage());
   }
 
@@ -71,7 +72,6 @@ class _SplashPageState extends State<SplashPage>
             const Text(
               "MoMovie",
               style: TextStyle(
-                color: Colors.white,
                 fontSize: 32,
                 fontWeight: FontWeight.w700,
               ),

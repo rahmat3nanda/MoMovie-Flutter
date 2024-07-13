@@ -35,8 +35,10 @@ class _DevPageState extends State<DevPage> {
             ),
             const Padding(
               padding: EdgeInsets.all(24.0),
-              child: Text("Halaman ini\nsedang dalam tahap\nPengembangan",
-                  textAlign: TextAlign.center),
+              child: Text(
+                "Halaman ini\nsedang dalam tahap\nPengembangan",
+                textAlign: TextAlign.center,
+              ),
             ),
           ],
         ),

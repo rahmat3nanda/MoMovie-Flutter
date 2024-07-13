@@ -50,7 +50,10 @@ class AppTheme {
           secondary: AppColor.secondary,
         ),
         textTheme: GoogleFonts.poppinsTextTheme(
-          Theme.of(context).textTheme,
+          Theme.of(context).textTheme.apply(
+                bodyColor: Colors.white,
+                displayColor: Colors.white,
+              ),
         ),
         inputDecorationTheme: InputDecorationTheme(
           contentPadding: const EdgeInsets.symmetric(horizontal: 24.0),
