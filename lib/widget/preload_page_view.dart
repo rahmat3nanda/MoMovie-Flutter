@@ -169,21 +169,14 @@ class PreloadPageController extends ScrollController {
 class PageMetrics extends FixedScrollMetrics {
   /// Creates an immutable snapshot of values associated with a [PreloadPageView].
   PageMetrics({
-    required double? minScrollExtent,
-    required double? maxScrollExtent,
-    required double? pixels,
-    required double? viewportDimension,
-    required double devicePixelRatio,
-    required AxisDirection axisDirection,
+    required super.minScrollExtent,
+    required super.maxScrollExtent,
+    required super.pixels,
+    required super.viewportDimension,
+    required super.devicePixelRatio,
+    required super.axisDirection,
     required this.viewportFraction,
-  }) : super(
-          minScrollExtent: minScrollExtent,
-          maxScrollExtent: maxScrollExtent,
-          pixels: pixels,
-          viewportDimension: viewportDimension,
-          axisDirection: axisDirection,
-          devicePixelRatio: devicePixelRatio,
-        );
+  });
 
   @override
   PageMetrics copyWith({
@@ -221,21 +214,18 @@ class PageMetrics extends FixedScrollMetrics {
 class _PagePosition extends ScrollPositionWithSingleContext
     implements PageMetrics {
   _PagePosition({
-    required ScrollPhysics physics,
-    required ScrollContext context,
+    required super.physics,
+    required super.context,
     this.initialPage = 0,
     bool keepPage = true,
     double viewportFraction = 1.0,
-    ScrollPosition? oldPosition,
+    super.oldPosition,
   })  : assert(viewportFraction > 0.0),
         _viewportFraction = viewportFraction,
         _pageToUseOnStartup = initialPage.toDouble(),
         super(
-          physics: physics,
-          context: context,
           initialPixels: null,
           keepScrollOffset: keepPage,
-          oldPosition: oldPosition,
         );
 
   final int initialPage;
@@ -346,7 +336,7 @@ class _PagePosition extends ScrollPositionWithSingleContext
 ///  * [PreloadPageView.physics], which can override the physics used by a page view.
 class PageScrollPhysics extends ScrollPhysics {
   /// Creates physics for a [PreloadPageView].
-  const PageScrollPhysics({ScrollPhysics? parent}) : super(parent: parent);
+  const PageScrollPhysics({super.parent});
 
   @override
   PageScrollPhysics applyTo(ScrollPhysics? ancestor) {
@@ -354,8 +344,9 @@ class PageScrollPhysics extends ScrollPhysics {
   }
 
   double _getPage(ScrollPosition position) {
-    if (position is _PagePosition && position.page != null)
+    if (position is _PagePosition && position.page != null) {
       return position.page!;
+    }
     return position.pixels / position.viewportDimension;
   }
 
@@ -367,9 +358,11 @@ class PageScrollPhysics extends ScrollPhysics {
   double _getTargetPixels(
       ScrollPosition position, Tolerance tolerance, double velocity) {
     double? page = _getPage(position);
-    if (velocity < -tolerance.velocity)
+    if (velocity < -tolerance.velocity) {
       page -= 0.5;
-    else if (velocity > tolerance.velocity) page += 0.5;
+    } else if (velocity > tolerance.velocity) {
+      page += 0.5;
+    }
     return _getPixels(position, page.roundToDouble());
   }
 
@@ -379,8 +372,9 @@ class PageScrollPhysics extends ScrollPhysics {
     // If we're out of range and not headed back in range, defer to the parent
     // ballistics, which should put us back in range at a page boundary.
     if ((velocity <= 0.0 && position.pixels <= position.minScrollExtent) ||
-        (velocity >= 0.0 && position.pixels >= position.maxScrollExtent))
+        (velocity >= 0.0 && position.pixels >= position.maxScrollExtent)) {
       return super.createBallisticSimulation(position, velocity);
+    }
     final Tolerance tolerance = toleranceFor(FixedScrollMetrics(
       minScrollExtent: null,
       maxScrollExtent: null,
@@ -392,9 +386,10 @@ class PageScrollPhysics extends ScrollPhysics {
     ));
     final double target =
         _getTargetPixels(position as ScrollPosition, tolerance, velocity);
-    if (target != position.pixels)
+    if (target != position.pixels) {
       return ScrollSpringSimulation(spring, position.pixels, target, velocity,
           tolerance: tolerance);
+    }
     return null;
   }
 
@@ -440,7 +435,7 @@ class PreloadPageView extends StatefulWidget {
   /// child that could possibly be displayed in the page view, instead of just
   /// those children that are actually visible.
   PreloadPageView({
-    Key? key,
+    super.key,
     this.scrollDirection = Axis.horizontal,
     this.reverse = false,
     PreloadPageController? controller,
@@ -450,8 +445,7 @@ class PreloadPageView extends StatefulWidget {
     List<Widget> children = const <Widget>[],
     this.preloadPagesCount = 1,
   })  : controller = controller ?? _defaultPageController,
-        childrenDelegate = SliverChildListDelegate(children),
-        super(key: key);
+        childrenDelegate = SliverChildListDelegate(children);
 
   /// Creates a scrollable list that works page by page using widgets that are
   /// created on demand.
@@ -468,7 +462,7 @@ class PreloadPageView extends StatefulWidget {
   ///
   /// You can add [preloadPagesCount] for PreloadPageView if you want preload multiple pages
   PreloadPageView.builder({
-    Key? key,
+    super.key,
     this.scrollDirection = Axis.horizontal,
     this.reverse = false,
     PreloadPageController? controller,
@@ -480,13 +474,12 @@ class PreloadPageView extends StatefulWidget {
     this.preloadPagesCount = 1,
   })  : controller = controller ?? _defaultPageController,
         childrenDelegate =
-            SliverChildBuilderDelegate(itemBuilder, childCount: itemCount),
-        super(key: key);
+            SliverChildBuilderDelegate(itemBuilder, childCount: itemCount);
 
   /// Creates a scrollable list that works page by page with a custom child
   /// model.
   PreloadPageView.custom({
-    Key? key,
+    super.key,
     this.scrollDirection = Axis.horizontal,
     this.reverse = false,
     PreloadPageController? controller,
@@ -495,8 +488,7 @@ class PreloadPageView extends StatefulWidget {
     this.onPageChanged,
     required this.childrenDelegate,
     this.preloadPagesCount = 1,
-  })  : controller = controller ?? _defaultPageController,
-        super(key: key);
+  }) : controller = controller ?? _defaultPageController;
 
   /// The axis along which the page view scrolls.
   ///
@@ -562,7 +554,7 @@ class _PreloadPageViewState extends State<PreloadPageView> {
 
   _PreloadPageViewState(int preloadPagesCount) {
     _validatePreloadPagesCount(preloadPagesCount);
-    this._preloadPagesCount = preloadPagesCount;
+    _preloadPagesCount = preloadPagesCount;
   }
 
   @override
