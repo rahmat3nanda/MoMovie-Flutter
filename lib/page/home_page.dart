@@ -165,6 +165,8 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _onSelect(MovieModel movie) {}
+
   @override
   void dispose() {
     _timerNowPlaying?.cancel();
@@ -280,9 +282,8 @@ class _HomePageState extends State<HomePage> {
                         curve: Curves.easeIn,
                         child: SearchPage(
                           query: _qSearch,
-                          showLoading: (b) => setState(() {
-                            _showLoading = b;
-                          }),
+                          showLoading: (b) => _showLoading = b,
+                          onSelect: _onSelect,
                         ),
                       ),
                     ),
@@ -467,7 +468,7 @@ class _HomePageState extends State<HomePage> {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: _itemView(
                     data: d,
-                    onTap: () {},
+                    onTap: () => _onSelect(d),
                   ),
                 );
               },
@@ -560,7 +561,7 @@ class _HomePageState extends State<HomePage> {
               width: MediaQuery.of(context).size.width * 0.8,
               child: _itemView(
                 data: d,
-                onTap: () {},
+                onTap: () => _onSelect(d),
               ),
             );
           },
@@ -623,7 +624,7 @@ class _HomePageState extends State<HomePage> {
               width: MediaQuery.of(context).size.width * 0.8,
               child: _itemView(
                 data: d,
-                onTap: () {},
+                onTap: () => _onSelect(d),
               ),
             );
           },
@@ -686,7 +687,7 @@ class _HomePageState extends State<HomePage> {
               width: MediaQuery.of(context).size.width * 0.8,
               child: _itemView(
                 data: d,
-                onTap: () {},
+                onTap: () => _onSelect(d),
               ),
             );
           },
