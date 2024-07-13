@@ -9,6 +9,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:momovie/common/styles.dart';
 import 'package:momovie/common/styles/app_color.dart';
 
 class AppTheme {
@@ -60,7 +61,7 @@ class AppTheme {
           hintStyle: const TextStyle(fontWeight: FontWeight.w500),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.0),
-            borderSide: const BorderSide(color: Colors.transparent),
+            borderSide: BorderSide(color: AppColor.primary),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.0),
@@ -72,7 +73,7 @@ class AppTheme {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.0),
-            borderSide: BorderSide(width: 1, color: AppColor.primary),
+            borderSide: BorderSide(width: 1, color: AppColor.secondary),
           ),
           disabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.0),
