@@ -8,6 +8,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:momovie/model/movie_model.dart';
 
 class SingletonModel {
   static SingletonModel? _singleton;
@@ -27,8 +28,16 @@ class SingletonModel {
 
   BuildContext? context;
   String? token;
+  SingletonMovieModel movie = SingletonMovieModel();
 
   void destroy() {
     _singleton = null;
   }
+}
+
+class SingletonMovieModel {
+  List<MovieModel>? nowPlaying;
+  List<MovieModel>? popular;
+  List<MovieModel>? topRated;
+  List<MovieModel>? upcoming;
 }
