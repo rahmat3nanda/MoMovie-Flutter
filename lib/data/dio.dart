@@ -41,6 +41,8 @@ class Dio {
         return h.next(r);
       }, onError: (d.DioException e, d.ErrorInterceptorHandler h) async {
         AppLog.print("URL error : ${e.requestOptions.path}");
+        AppLog.print("Message error : ${e.message}");
+        AppLog.print("Response error : ${e.response}");
 
         return h.next(e);
       }),
