@@ -22,4 +22,7 @@ class APIMovie {
   final String topRated = "movie/top_rated";
   final String upcoming = "movie/upcoming";
   final String search = "search/movie";
+   String movies(int id) => "movie/$id/videos";
+   String recommendations(int id) => "movie/$id/recommendations";
+   String similar(int id) => "movie/$id/similar";
 }

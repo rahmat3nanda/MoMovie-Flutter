@@ -107,4 +107,39 @@ class RequestMovie {
       },
     );
   }
+
+  Future<dio.Response> movies({required int id, String language = "en-US"}) {
+    return _repo.movie.movies(
+      id: id,
+      param: {"language": language},
+    );
+  }
+
+  Future<dio.Response> recommendations({
+    required int id,
+    required int page,
+    String language = "en-US",
+  }) {
+    return _repo.movie.recommendations(
+      id: id,
+      param: {
+        "page": page,
+        "language": language,
+      },
+    );
+  }
+
+  Future<dio.Response> similar({
+    required int id,
+    required int page,
+    String language = "en-US",
+  }) {
+    return _repo.movie.similar(
+      id: id,
+      param: {
+        "page": page,
+        "language": language,
+      },
+    );
+  }
 }
