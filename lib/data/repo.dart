@@ -25,7 +25,7 @@ class Repo {
 }
 
 class RepoGenre {
-  Future<dio.Response> data() async {
+  Future<dio.Response> movie() async {
     return await _dio.get(url: _api.genre.movie);
   }
 }
