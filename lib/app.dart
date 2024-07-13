@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:momovie/bloc/genre/genre_bloc.dart';
+import 'package:momovie/bloc/movie/movie_bloc.dart';
 import 'package:momovie/common/configs.dart';
 import 'package:momovie/common/constants.dart';
 import 'package:momovie/common/styles.dart';
@@ -52,6 +53,9 @@ class _AppState extends State<App> {
       providers: [
         BlocProvider<GenreBloc>(
           create: (BuildContext context) => GenreBloc(GenreInitialState()),
+        ),
+        BlocProvider<MovieBloc>(
+          create: (BuildContext context) => MovieBloc(MovieInitialState()),
         ),
       ],
       child: MaterialApp(
