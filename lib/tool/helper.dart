@@ -19,7 +19,6 @@ import 'package:momovie/data/sp_data.dart';
 import 'package:momovie/model/app/app_version_model.dart';
 import 'package:momovie/model/app/singleton_model.dart';
 import 'package:momovie/model/response_model.dart';
-import 'package:momovie/model/store_version_model.dart';
 
 class Helper {
   Future exitApp() {
@@ -139,36 +138,6 @@ class Helper {
       onCopied();
     });
   }
-
-  bool updateAvailable(StoreVersionModel storeVersion) {
-    AppVersionModel appVersion = AppConfig.shared.version;
-    String appVersionName = appVersion.name;
-    int appVersionNumber = appVersion.number;
-
-    String storeVersionName = storeVersion.versionName ?? "";
-    int storeVersionNumber = storeVersion.versionNumber ?? 0;
-
-    if (RegExp(r'\d+\.\d+\.\d+').hasMatch(storeVersionName)) {
-      List<String> currentV = appVersionName.split(".");
-      List<String> newV = storeVersionName.split(".");
-
-      bool updateAvailByName = false;
-      for (int i = 0; i <= 2; i++) {
-        updateAvailByName = int.parse(newV[i]) > int.parse(currentV[i]);
-        if (int.parse(newV[i]) != int.parse(currentV[i])) break;
-      }
-
-      if (updateAvailByName) {
-        return updateAvailByName;
-      }
-    }
-
-    if (storeVersionName == appVersionName) {
-      return storeVersionNumber > appVersionNumber;
-    }
-
-    return false;
-  }
 }
 
 extension EmailValidator on String {
@@ -186,7 +155,6 @@ extension StateHelper on State {
     return toString().split("#").first;
   }
 }
-
 
 extension StringHelper on String? {
   bool isNullOrEmpty() {
