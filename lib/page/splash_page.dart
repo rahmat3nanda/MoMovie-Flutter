@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:momovie/common/constants.dart';
 import 'package:momovie/model/app/singleton_model.dart';
-import 'package:momovie/page/dev_page.dart';
+import 'package:momovie/page/home_page.dart';
 import 'package:momovie/tool/helper.dart';
 
 class SplashPage extends StatefulWidget {
@@ -49,7 +49,7 @@ class _SplashPageState extends State<SplashPage>
   void _setup() async {
     await _controller.forward();
     await Future.delayed(const Duration(seconds: 1));
-    _helper.moveToPage(_model.context!, page: const DevPage());
+    _helper.moveToPage(_model.context!, page: const HomePage());
   }
 
   @override
