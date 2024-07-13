@@ -1,6 +1,6 @@
-# momovie
+# MoMovie
 
-Movie
+Movie App
 
 ## Getting Started
 
