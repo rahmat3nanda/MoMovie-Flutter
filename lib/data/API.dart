@@ -8,9 +8,9 @@
  */
 
 class API {
-  var genre = _APIGenre();
+  APIGenre genre = APIGenre();
 }
 
-class _APIGenre {
+class APIGenre {
   final String movie = "genre/movie/list";
 }
