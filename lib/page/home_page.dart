@@ -16,6 +16,7 @@ import 'package:momovie/bloc/movie/movie_bloc.dart';
 import 'package:momovie/common/configs.dart';
 import 'package:momovie/common/constants.dart';
 import 'package:momovie/common/styles.dart';
+import 'package:momovie/dialog/movie_dialog.dart';
 import 'package:momovie/model/app/error_model.dart';
 import 'package:momovie/model/app/singleton_model.dart';
 import 'package:momovie/model/movie_model.dart';
@@ -25,6 +26,7 @@ import 'package:momovie/widget/image_network_widget.dart';
 import 'package:momovie/widget/loading_overlay.dart';
 import 'package:momovie/widget/preload_page_view.dart';
 import 'package:momovie/widget/reload_data_widget.dart';
+import 'package:momovie/widget/section_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class HomePage extends StatefulWidget {
@@ -165,7 +167,9 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _onSelect(MovieModel movie) {}
+  void _onSelect(MovieModel movie) {
+    openMovieDialog(context, movie: movie);
+  }
 
   @override
   void dispose() {
@@ -414,7 +418,7 @@ class _HomePageState extends State<HomePage> {
   Widget _nowPlayingView() {
     String title = "🎬 Now Playing";
     if (_isLoadNowPlaying) {
-      return _sectionView(
+      return SectionWidget(
         title: title,
         child: Center(
           child: SpinKitWaveSpinner(
@@ -428,7 +432,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     if (_errorNowPlaying != null) {
-      return _sectionView(
+      return SectionWidget(
         title: title,
         child: Center(
           child: Center(
@@ -444,12 +448,12 @@ class _HomePageState extends State<HomePage> {
     if (_model.movie.nowPlaying?.isEmpty ?? true) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
-        child: _sectionView(title: title, child: _emptyView()),
+        child: SectionWidget(title: title, child: _emptyView()),
       );
     }
 
     double size = 8;
-    return _sectionView(
+    return SectionWidget(
       title: title,
       child: Column(
         children: [
@@ -510,7 +514,7 @@ class _HomePageState extends State<HomePage> {
   Widget _popularView() {
     String title = "🔥 Popular";
     if (_isLoadPopular) {
-      return _sectionView(
+      return SectionWidget(
         title: title,
         child: Center(
           child: SpinKitWaveSpinner(
@@ -524,7 +528,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     if (_errorPopular != null) {
-      return _sectionView(
+      return SectionWidget(
         title: title,
         child: Center(
           child: Center(
@@ -540,11 +544,11 @@ class _HomePageState extends State<HomePage> {
     if (_model.movie.popular?.isEmpty ?? true) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
-        child: _sectionView(title: title, child: _emptyView()),
+        child: SectionWidget(title: title, child: _emptyView()),
       );
     }
 
-    return _sectionView(
+    return SectionWidget(
       title: title,
       child: SizedBox(
         height: 156,
@@ -573,7 +577,7 @@ class _HomePageState extends State<HomePage> {
   Widget _topRatedView() {
     String title = "🎖️ Top Rated";
     if (_isLoadTopRated) {
-      return _sectionView(
+      return SectionWidget(
         title: title,
         child: Center(
           child: SpinKitWaveSpinner(
@@ -587,7 +591,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     if (_errorTopRated != null) {
-      return _sectionView(
+      return SectionWidget(
         title: title,
         child: Center(
           child: Center(
@@ -603,11 +607,11 @@ class _HomePageState extends State<HomePage> {
     if (_model.movie.topRated?.isEmpty ?? true) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
-        child: _sectionView(title: title, child: _emptyView()),
+        child: SectionWidget(title: title, child: _emptyView()),
       );
     }
 
-    return _sectionView(
+    return SectionWidget(
       title: title,
       child: SizedBox(
         height: 156,
@@ -636,7 +640,7 @@ class _HomePageState extends State<HomePage> {
   Widget _upcomingView() {
     String title = "📝 Upcoming";
     if (_isLoadUpcoming) {
-      return _sectionView(
+      return SectionWidget(
         title: title,
         child: Center(
           child: SpinKitWaveSpinner(
@@ -650,7 +654,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     if (_errorUpcoming != null) {
-      return _sectionView(
+      return SectionWidget(
         title: title,
         child: Center(
           child: Center(
@@ -666,11 +670,11 @@ class _HomePageState extends State<HomePage> {
     if (_model.movie.upcoming?.isEmpty ?? true) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
-        child: _sectionView(title: title, child: _emptyView()),
+        child: SectionWidget(title: title, child: _emptyView()),
       );
     }
 
-    return _sectionView(
+    return SectionWidget(
       title: title,
       child: SizedBox(
         height: 156,
@@ -693,26 +697,6 @@ class _HomePageState extends State<HomePage> {
           },
         ),
       ),
-    );
-  }
-
-  Widget _sectionView({required String title, required Widget child}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Text(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.w700,
-              fontSize: 18,
-            ),
-          ),
-        ),
-        const SizedBox(height: 16),
-        child
-      ],
     );
   }
 
@@ -784,9 +768,7 @@ class _HomePageState extends State<HomePage> {
               defaultImage: "",
               clickable: false,
             ),
-            Container(
-              color: Colors.black.withOpacity(0.5),
-            ),
+            Container(color: Colors.black.withOpacity(0.5)),
             Padding(
               padding: const EdgeInsets.symmetric(
                 vertical: 8,
