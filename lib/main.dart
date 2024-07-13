@@ -17,6 +17,7 @@ import 'package:momovie/common/configs/app_config.dart';
 import 'package:momovie/common/constants.dart';
 import 'package:momovie/model/app/app_version_model.dart';
 import 'package:momovie/model/app/scheme_model.dart';
+import 'package:momovie/model/app/singleton_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,5 +38,7 @@ void main() async {
     version: AppVersionModel.empty(),
   );
   Bloc.observer = Observer();
+  SingletonModel.shared.token =
+      "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTM5ZmJiNGE1ODIxMTdjNDRiMjljZjFhODUwYzI2YyIsIm5iZiI6MTcyMDg2MzEzMC43NzYyMjksInN1YiI6IjY2OTI0MjMyYWZlNDhhYTY1MzYzYTI5NiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.PcTEjQMH6gJAc6bKES-XdUBcIO9DpG6PgulBAWYuW54";
   runApp(const App());
 }

@@ -26,6 +26,7 @@ class SingletonModel {
   static SingletonModel get shared => _singleton ??= SingletonModel._internal();
 
   BuildContext? context;
+  String? token;
 
   void destroy() {
     _singleton = null;
