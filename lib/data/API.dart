@@ -9,8 +9,17 @@
 
 class API {
   APIGenre genre = APIGenre();
+  APIMovie movie = APIMovie();
 }
 
 class APIGenre {
   final String movie = "genre/movie/list";
+}
+
+class APIMovie {
+  final String nowPlaying = "movie/now_playing";
+  final String popular = "movie/popular";
+  final String topRated = "movie/top_rated";
+  final String upcoming = "movie/upcoming";
+  final String search = "search/movie";
 }
