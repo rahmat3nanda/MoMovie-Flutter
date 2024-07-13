@@ -10,6 +10,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:momovie/model/movie_model.dart';
 import 'package:momovie/model/response_model.dart';
+import 'package:momovie/model/video_model.dart';
 
 abstract class MovieState extends Equatable {
   const MovieState();
@@ -71,4 +72,45 @@ class MovieSearchFailedState extends MovieState {
   final ResponseModel data;
 
   const MovieSearchFailedState(this.data);
+}
+
+class MovieVideosSuccessState extends MovieState {
+  final List<VideoModel> data;
+
+  const MovieVideosSuccessState(this.data);
+}
+
+class MovieVideosFailedState extends MovieState {
+  final ResponseModel data;
+
+  const MovieVideosFailedState(this.data);
+}
+
+class MovieRecommendationsSuccessState extends MovieState {
+  final List<MovieModel> data;
+  final int page;
+
+  const MovieRecommendationsSuccessState({
+    required this.data,
+    required this.page,
+  });
+}
+
+class MovieRecommendationsFailedState extends MovieState {
+  final ResponseModel data;
+
+  const MovieRecommendationsFailedState(this.data);
+}
+
+class MovieSimilarSuccessState extends MovieState {
+  final List<MovieModel> data;
+  final int page;
+
+  const MovieSimilarSuccessState({required this.data, required this.page});
+}
+
+class MovieSimilarFailedState extends MovieState {
+  final ResponseModel data;
+
+  const MovieSimilarFailedState(this.data);
 }

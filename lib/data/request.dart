@@ -108,8 +108,8 @@ class RequestMovie {
     );
   }
 
-  Future<dio.Response> movies({required int id, String language = "en-US"}) {
-    return _repo.movie.movies(
+  Future<dio.Response> videos({required int id, String language = "en-US"}) {
+    return _repo.movie.videos(
       id: id,
       param: {"language": language},
     );

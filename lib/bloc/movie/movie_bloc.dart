@@ -17,6 +17,7 @@ import 'package:momovie/common/constants.dart';
 import 'package:momovie/data/request.dart';
 import 'package:momovie/model/app/singleton_model.dart';
 import 'package:momovie/model/movie_model.dart';
+import 'package:momovie/model/video_model.dart';
 import 'package:momovie/tool/helper.dart';
 
 export 'package:momovie/bloc/movie/movie_event.dart';
@@ -31,6 +32,9 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     on<MovieTopRatedEvent>(_topRated);
     on<MovieUpcomingEvent>(_upcoming);
     on<MovieSearchEvent>(_search);
+    on<MovieVideosEvent>(_videos);
+    on<MovieRecommendationsEvent>(_recommendations);
+    on<MovieSimilarEvent>(_similar);
   }
 
   void _nowPlaying(
@@ -149,6 +153,65 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     } catch (e) {
       state(
         MovieSearchFailedState(_helper.dioErrorHandler(e)),
+      );
+    }
+  }
+
+  void _videos(MovieVideosEvent event, Emitter<MovieState> state) async {
+    state(MovieInitialState());
+    try {
+      Response res = await Request().movie.videos(
+            id: event.id,
+            language: event.language,
+          );
+      List<VideoModel> data = List<VideoModel>.from(
+          res.data["results"].map((x) => MovieModel.fromJson(x)));
+      AppLog.print(jsonEncode(data));
+      state(MovieVideosSuccessState(data));
+    } catch (e) {
+      state(
+        MovieVideosFailedState(_helper.dioErrorHandler(e)),
+      );
+    }
+  }
+
+  void _recommendations(
+    MovieRecommendationsEvent event,
+    Emitter<MovieState> state,
+  ) async {
+    state(MovieInitialState());
+    try {
+      Response res = await Request().movie.recommendations(
+            id: event.id,
+            page: event.page,
+            language: event.language,
+          );
+      List<MovieModel> data = List<MovieModel>.from(
+          res.data["results"].map((x) => MovieModel.fromJson(x)));
+      AppLog.print(jsonEncode(data));
+      state(MovieRecommendationsSuccessState(data: data, page: event.page));
+    } catch (e) {
+      state(
+        MovieVideosFailedState(_helper.dioErrorHandler(e)),
+      );
+    }
+  }
+
+  void _similar(MovieSimilarEvent event, Emitter<MovieState> state) async {
+    state(MovieInitialState());
+    try {
+      Response res = await Request().movie.similar(
+            id: event.id,
+            page: event.page,
+            language: event.language,
+          );
+      List<MovieModel> data = List<MovieModel>.from(
+          res.data["results"].map((x) => MovieModel.fromJson(x)));
+      AppLog.print(jsonEncode(data));
+      state(MovieSimilarSuccessState(data: data, page: event.page));
+    } catch (e) {
+      state(
+        MovieSimilarFailedState(_helper.dioErrorHandler(e)),
       );
     }
   }

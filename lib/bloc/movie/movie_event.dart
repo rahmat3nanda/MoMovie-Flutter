@@ -108,3 +108,52 @@ class MovieSearchEvent extends MovieEvent {
     return 'MovieSearchEvent{page: $page, query: $query, includeAdult: $includeAdult, language: $language, region: $region, primaryReleaseYear: $primaryReleaseYear, year: $year}';
   }
 }
+
+class MovieVideosEvent extends MovieEvent {
+  final int id;
+  final String language;
+
+  const MovieVideosEvent({
+    required this.id,
+    this.language = "en-US",
+  });
+
+  @override
+  String toString() {
+    return 'MovieVideosEvent{id: $id, language: $language}';
+  }
+}
+
+class MovieRecommendationsEvent extends MovieEvent {
+  final int id;
+  final int page;
+  final String language;
+
+  const MovieRecommendationsEvent({
+    required this.id,
+    required this.page,
+    this.language = "en-US",
+  });
+
+  @override
+  String toString() {
+    return 'MovieRecommendationsEvent{id: $id, page: $page, language: $language}';
+  }
+}
+
+class MovieSimilarEvent extends MovieEvent {
+  final int id;
+  final int page;
+  final String language;
+
+  const MovieSimilarEvent({
+    required this.id,
+    required this.page,
+    this.language = "en-US",
+  });
+
+  @override
+  String toString() {
+    return 'MovieSimilarEvent{id: $id, page: $page, language: $language}';
+  }
+}

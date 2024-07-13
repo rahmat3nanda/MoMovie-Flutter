@@ -53,11 +53,11 @@ class RepoMovie {
     return await _dio.get(url: _api.movie.search, param: param);
   }
 
-  Future<dio.Response> movies({
+  Future<dio.Response> videos({
     required int id,
     required Map<String, dynamic> param,
   }) async {
-    return await _dio.get(url: _api.movie.movies(id), param: param);
+    return await _dio.get(url: _api.movie.videos(id), param: param);
   }
 
   Future<dio.Response> recommendations({
