@@ -22,6 +22,7 @@ import 'package:momovie/model/movie_model.dart';
 import 'package:momovie/page/search_page.dart';
 import 'package:momovie/tool/helper.dart';
 import 'package:momovie/widget/image_network_widget.dart';
+import 'package:momovie/widget/loading_overlay.dart';
 import 'package:momovie/widget/preload_page_view.dart';
 import 'package:momovie/widget/reload_data_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -56,7 +57,8 @@ class _HomePageState extends State<HomePage> {
   late bool _isLoadPopular;
   late bool _isLoadTopRated;
   late bool _isLoadUpcoming;
-  late bool _isSearch;
+  late bool _showSearch;
+  late bool _showLoading;
 
   @override
   void initState() {
@@ -77,7 +79,8 @@ class _HomePageState extends State<HomePage> {
     _isLoadPopular = false;
     _isLoadTopRated = false;
     _isLoadUpcoming = false;
-    _isSearch = false;
+    _showSearch = false;
+    _showLoading = false;
     _onRefresh(fromCache: true);
     _setupAutoScroll();
   }
@@ -231,45 +234,60 @@ class _HomePageState extends State<HomePage> {
       child: BlocBuilder(
         bloc: _movieBloc,
         builder: (c, s) {
-          return Scaffold(
-            appBar: _appBar(),
-            body: SafeArea(
-              child: Stack(
-                children: [
-                  IgnorePointer(
-                    ignoring: _isSearch,
-                    child: AnimatedOpacity(
-                      opacity: !_isSearch ? 1 : 0,
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeIn,
-                      child: SmartRefresher(
-                        primary: true,
-                        physics: const ClampingScrollPhysics(),
-                        enablePullDown: true,
-                        enablePullUp: false,
-                        header: WaterDropMaterialHeader(
-                          backgroundColor: AppColor.primary,
-                          color: Colors.black,
+          return LoadingOverlay(
+            isLoading: _showLoading,
+            color: Colors.black,
+            progressIndicator: SpinKitWaveSpinner(
+              color: AppColor.primaryLight,
+              trackColor: AppColor.primary,
+              waveColor: AppColor.secondary,
+              size: 64,
+            ),
+            child: Scaffold(
+              appBar: _appBar(),
+              body: SafeArea(
+                child: Stack(
+                  children: [
+                    IgnorePointer(
+                      ignoring: _showSearch,
+                      child: AnimatedOpacity(
+                        opacity: !_showSearch ? 1 : 0,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeIn,
+                        child: SmartRefresher(
+                          primary: true,
+                          physics: const ClampingScrollPhysics(),
+                          enablePullDown: true,
+                          enablePullUp: false,
+                          header: WaterDropMaterialHeader(
+                            backgroundColor: AppColor.primary,
+                            color: Colors.black,
+                          ),
+                          footer: CustomFooter(
+                            builder: (context, status) => Container(),
+                          ),
+                          controller: _cRefresh,
+                          onRefresh: _onRefresh,
+                          child: _stateView(),
                         ),
-                        footer: CustomFooter(
-                          builder: (context, status) => Container(),
-                        ),
-                        controller: _cRefresh,
-                        onRefresh: _onRefresh,
-                        child: _stateView(),
                       ),
                     ),
-                  ),
-                  IgnorePointer(
-                    ignoring: !_isSearch,
-                    child: AnimatedOpacity(
-                      opacity: _isSearch ? 1 : 0,
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeIn,
-                      child: SearchPage(query: _qSearch),
+                    IgnorePointer(
+                      ignoring: !_showSearch,
+                      child: AnimatedOpacity(
+                        opacity: _showSearch ? 1 : 0,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeIn,
+                        child: SearchPage(
+                          query: _qSearch,
+                          loadingBuilder: (b) => setState(() {
+                            _showLoading = b;
+                          }),
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );
@@ -286,25 +304,25 @@ class _HomePageState extends State<HomePage> {
           AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeIn,
-            width: !_isSearch ? width - 80 : 0,
+            width: !_showSearch ? width - 80 : 0,
             child: const Text("MoMovie"),
           ),
           AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeIn,
-            width: _isSearch ? width - 32 : 0,
+            width: _showSearch ? width - 32 : 0,
             child: TextFormField(
               maxLines: 1,
               textInputAction: TextInputAction.search,
               controller: _cSearch,
-              enabled: _isSearch,
+              enabled: _showSearch,
               textCapitalization: TextCapitalization.words,
               keyboardType: TextInputType.text,
               onFieldSubmitted: (s) => _onSearch(),
               decoration: InputDecoration(
                 hintText: "Search",
                 hintStyle: const TextStyle(color: Colors.white),
-                prefixIcon: _isSearch
+                prefixIcon: _showSearch
                     ? IconButton(
                         onPressed: _onSearch,
                         icon: const Icon(
@@ -313,10 +331,10 @@ class _HomePageState extends State<HomePage> {
                         ),
                       )
                     : null,
-                suffixIcon: _isSearch
+                suffixIcon: _showSearch
                     ? IconButton(
                         onPressed: () => setState(() {
-                          _isSearch = false;
+                          _showSearch = false;
                         }),
                         icon: const Icon(
                           Icons.close,
@@ -333,10 +351,10 @@ class _HomePageState extends State<HomePage> {
         AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeIn,
-          width: _isSearch ? 0 : 48,
+          width: _showSearch ? 0 : 48,
           child: IconButton(
             onPressed: () => setState(() {
-              _isSearch = true;
+              _showSearch = true;
             }),
             icon: const Icon(Icons.search),
           ),
