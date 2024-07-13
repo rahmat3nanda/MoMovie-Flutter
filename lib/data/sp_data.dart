@@ -1,9 +1,9 @@
 /*
  * *
- *  * sp_data.dart - Siadin Mobile
- *  * Created by Rahmat Trinanda (rahmat3nanda@gmail.com) on 07/08/2023, 17:01
- *  * Copyright (c) 2023 . All rights reserved.
- *  * Last modified 07/08/2023, 17:03
+ *  * sp_data.dart - MoMovie
+ *  * Created by Rahmat Trinanda (rahmat3nanda@gmail.com) on 07/13/2024, 18:27
+ *  * Copyright (c) 2024 . All rights reserved.
+ *  * Last modified 06/05/2024, 00:05
  *
  */
 
