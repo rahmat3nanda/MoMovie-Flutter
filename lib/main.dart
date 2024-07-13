@@ -35,6 +35,7 @@ void main() async {
   AppConfig.shared.initialize(
     scheme: AppScheme.prod,
     baseUrlApi: "https://api.themoviedb.org/3/",
+    baseUrlImage: "https://image.tmdb.org/t/p/w1280",
     version: AppVersionModel.empty(),
   );
   Bloc.observer = Observer();
