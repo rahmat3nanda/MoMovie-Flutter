@@ -34,22 +34,22 @@ class RepoGenre {
 
 class RepoMovie {
   Future<dio.Response> nowPlaying({required Map<String, dynamic> param}) async {
-    return await _dio.get(url: _api.movie.nowPlaying);
+    return await _dio.get(url: _api.movie.nowPlaying, param: param);
   }
 
   Future<dio.Response> popular({required Map<String, dynamic> param}) async {
-    return await _dio.get(url: _api.movie.popular);
+    return await _dio.get(url: _api.movie.popular, param: param);
   }
 
   Future<dio.Response> topRated({required Map<String, dynamic> param}) async {
-    return await _dio.get(url: _api.movie.topRated);
+    return await _dio.get(url: _api.movie.topRated, param: param);
   }
 
   Future<dio.Response> upcoming({required Map<String, dynamic> param}) async {
-    return await _dio.get(url: _api.movie.upcoming);
+    return await _dio.get(url: _api.movie.upcoming, param: param);
   }
 
   Future<dio.Response> search({required Map<String, dynamic> param}) async {
-    return await _dio.get(url: _api.movie.search);
+    return await _dio.get(url: _api.movie.search, param: param);
   }
 }
