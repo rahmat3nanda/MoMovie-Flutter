@@ -53,6 +53,8 @@ dependencies:
       url: https://github.com/peng8350/flutter_pulltorefresh.git
       ref: master # commit hash
   device_info_plus: ^10.1.0
+#  video_player: ^2.9.1
+  youtube_player_flutter: ^9.0.1
 
 dev_dependencies:
   flutter_test:
