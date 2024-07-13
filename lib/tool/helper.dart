@@ -14,9 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:momovie/common/configs.dart';
 import 'package:momovie/data/sp_data.dart';
-import 'package:momovie/model/app/app_version_model.dart';
 import 'package:momovie/model/app/singleton_model.dart';
 import 'package:momovie/model/response_model.dart';
 
