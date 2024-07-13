@@ -44,7 +44,7 @@ class AppTheme {
         ),
         primaryColor: AppColor.primaryLight,
         primaryColorDark: AppColor.primary,
-        scaffoldBackgroundColor: AppColor.primaryLight,
+        scaffoldBackgroundColor: Colors.black,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         colorScheme: ColorScheme.fromSwatch().copyWith(
           secondary: AppColor.secondary,
