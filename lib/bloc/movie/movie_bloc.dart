@@ -145,7 +145,7 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
       List<MovieModel> data = List<MovieModel>.from(
           res.data["results"].map((x) => MovieModel.fromJson(x)));
       AppLog.print(jsonEncode(data));
-      state(MovieSearchSuccessState(data));
+      state(MovieSearchSuccessState(data: data, page: event.page));
     } catch (e) {
       state(
         MovieSearchFailedState(_helper.dioErrorHandler(e)),

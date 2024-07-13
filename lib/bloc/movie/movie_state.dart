@@ -62,8 +62,9 @@ class MovieUpcomingFailedState extends MovieState {
 
 class MovieSearchSuccessState extends MovieState {
   final List<MovieModel> data;
+  final int page;
 
-  const MovieSearchSuccessState(this.data);
+  const MovieSearchSuccessState({required this.data, required this.page});
 }
 
 class MovieSearchFailedState extends MovieState {
