@@ -165,7 +165,7 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
             language: event.language,
           );
       List<VideoModel> data = List<VideoModel>.from(
-          res.data["results"].map((x) => MovieModel.fromJson(x)));
+          res.data["results"].map((x) => VideoModel.fromJson(x)));
       AppLog.print(jsonEncode(data));
       state(MovieVideosSuccessState(data));
     } catch (e) {
