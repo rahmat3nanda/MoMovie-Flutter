@@ -19,6 +19,7 @@ import 'package:momovie/common/styles.dart';
 import 'package:momovie/model/app/error_model.dart';
 import 'package:momovie/model/app/singleton_model.dart';
 import 'package:momovie/model/movie_model.dart';
+import 'package:momovie/page/search_page.dart';
 import 'package:momovie/tool/helper.dart';
 import 'package:momovie/widget/image_network_widget.dart';
 import 'package:momovie/widget/preload_page_view.dart';
@@ -39,21 +40,23 @@ class _HomePageState extends State<HomePage> {
 
   late RefreshController _cRefresh;
   late PreloadPageController _cNowPlaying;
+  late TextEditingController _cSearch;
   late int _iNowPlaying;
   Timer? _timerNowPlaying;
   ErrorModel? _errorNowPlaying;
   ErrorModel? _errorPopular;
   ErrorModel? _errorTopRated;
   ErrorModel? _errorUpcoming;
+  late String _qSearch;
   late int _pageNowPlaying;
   late int _pagePopular;
   late int _pageTopRated;
   late int _pageUpcoming;
-  late bool _onLoadNowPlaying;
-  late bool _onLoadPopular;
-  late bool _onLoadTopRated;
-  late bool _onLoadUpcoming;
-  late bool _onSearch;
+  late bool _isLoadNowPlaying;
+  late bool _isLoadPopular;
+  late bool _isLoadTopRated;
+  late bool _isLoadUpcoming;
+  late bool _isSearch;
 
   @override
   void initState() {
@@ -63,16 +66,18 @@ class _HomePageState extends State<HomePage> {
     _helper = Helper();
     _cRefresh = RefreshController(initialRefresh: false);
     _cNowPlaying = PreloadPageController();
+    _cSearch = TextEditingController();
+    _qSearch = "";
     _iNowPlaying = 0;
     _pageNowPlaying = 1;
     _pagePopular = 1;
     _pageTopRated = 1;
     _pageUpcoming = 1;
-    _onLoadNowPlaying = false;
-    _onLoadPopular = false;
-    _onLoadTopRated = false;
-    _onLoadUpcoming = false;
-    _onSearch = false;
+    _isLoadNowPlaying = false;
+    _isLoadPopular = false;
+    _isLoadTopRated = false;
+    _isLoadUpcoming = false;
+    _isSearch = false;
     _onRefresh(fromCache: true);
     _setupAutoScroll();
   }
@@ -103,11 +108,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _getDataNowPlaying({bool fromCache = false}) {
-    _onLoadTopRated = true;
+    _isLoadTopRated = true;
     _errorTopRated = null;
 
     if (fromCache && _model.movie.nowPlaying != null) {
-      _onLoadTopRated = false;
+      _isLoadTopRated = false;
       return;
     }
 
@@ -115,11 +120,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _getDataPopular({bool fromCache = false}) {
-    _onLoadPopular = true;
+    _isLoadPopular = true;
     _errorPopular = null;
 
     if (fromCache && _model.movie.popular != null) {
-      _onLoadPopular = false;
+      _isLoadPopular = false;
       return;
     }
 
@@ -127,11 +132,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _getDataTopRated({bool fromCache = false}) {
-    _onLoadTopRated = true;
+    _isLoadTopRated = true;
     _errorTopRated = null;
 
     if (fromCache && _model.movie.topRated != null) {
-      _onLoadTopRated = false;
+      _isLoadTopRated = false;
       return;
     }
 
@@ -139,15 +144,22 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _getDataUpcoming({bool fromCache = false}) {
-    _onLoadUpcoming = true;
+    _isLoadUpcoming = true;
     _errorUpcoming = null;
 
     if (fromCache && _model.movie.upcoming != null) {
-      _onLoadUpcoming = false;
+      _isLoadUpcoming = false;
       return;
     }
 
     _movieBloc.add(MovieUpcomingEvent(page: _pageUpcoming));
+  }
+
+  void _onSearch() {
+    setState(() {
+      _cSearch.text = _cSearch.text.trim();
+      _qSearch = _cSearch.text;
+    });
   }
 
   @override
@@ -164,18 +176,18 @@ class _HomePageState extends State<HomePage> {
       listener: (c, s) {
         if (s is MovieNowPlayingSuccessState) {
           _model = SingletonModel.withContext(context);
-          _onLoadNowPlaying = false;
+          _isLoadNowPlaying = false;
         } else if (s is MoviePopularSuccessState) {
           _model = SingletonModel.withContext(context);
-          _onLoadPopular = false;
+          _isLoadPopular = false;
         } else if (s is MovieTopRatedSuccessState) {
           _model = SingletonModel.withContext(context);
-          _onLoadTopRated = false;
+          _isLoadTopRated = false;
         } else if (s is MovieUpcomingSuccessState) {
           _model = SingletonModel.withContext(context);
-          _onLoadUpcoming = false;
+          _isLoadUpcoming = false;
         } else if (s is MovieNowPlayingFailedState) {
-          _onLoadNowPlaying = false;
+          _isLoadNowPlaying = false;
           if (_model.movie.nowPlaying != null) {
             _helper.showToast("Gagal memuat data now playing");
           } else {
@@ -185,7 +197,7 @@ class _HomePageState extends State<HomePage> {
             );
           }
         } else if (s is MoviePopularFailedState) {
-          _onLoadPopular = false;
+          _isLoadPopular = false;
           if (_model.movie.popular != null) {
             _helper.showToast("Gagal memuat data popular");
           } else {
@@ -195,7 +207,7 @@ class _HomePageState extends State<HomePage> {
             );
           }
         } else if (s is MovieTopRatedFailedState) {
-          _onLoadTopRated = false;
+          _isLoadTopRated = false;
           if (_model.movie.topRated != null) {
             _helper.showToast("Gagal memuat data top rated");
           } else {
@@ -205,7 +217,7 @@ class _HomePageState extends State<HomePage> {
             );
           }
         } else if (s is MovieUpcomingFailedState) {
-          _onLoadUpcoming = false;
+          _isLoadUpcoming = false;
           if (_model.movie.upcoming != null) {
             _helper.showToast("Gagal memuat data upcoming");
           } else {
@@ -220,23 +232,44 @@ class _HomePageState extends State<HomePage> {
         bloc: _movieBloc,
         builder: (c, s) {
           return Scaffold(
-            appBar: AppBar(title: const Text("MoMovie")),
+            appBar: _appBar(),
             body: SafeArea(
-              child: SmartRefresher(
-                primary: true,
-                physics: const ClampingScrollPhysics(),
-                enablePullDown: true,
-                enablePullUp: false,
-                header: WaterDropMaterialHeader(
-                  backgroundColor: AppColor.primary,
-                  color: Colors.black,
-                ),
-                footer: CustomFooter(
-                  builder: (context, status) => Container(),
-                ),
-                controller: _cRefresh,
-                onRefresh: _onRefresh,
-                child: _stateView(),
+              child: Stack(
+                children: [
+                  IgnorePointer(
+                    ignoring: _isSearch,
+                    child: AnimatedOpacity(
+                      opacity: !_isSearch ? 1 : 0,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeIn,
+                      child: SmartRefresher(
+                        primary: true,
+                        physics: const ClampingScrollPhysics(),
+                        enablePullDown: true,
+                        enablePullUp: false,
+                        header: WaterDropMaterialHeader(
+                          backgroundColor: AppColor.primary,
+                          color: Colors.black,
+                        ),
+                        footer: CustomFooter(
+                          builder: (context, status) => Container(),
+                        ),
+                        controller: _cRefresh,
+                        onRefresh: _onRefresh,
+                        child: _stateView(),
+                      ),
+                    ),
+                  ),
+                  IgnorePointer(
+                    ignoring: !_isSearch,
+                    child: AnimatedOpacity(
+                      opacity: _isSearch ? 1 : 0,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeIn,
+                      child: SearchPage(query: _qSearch),
+                    ),
+                  ),
+                ],
               ),
             ),
           );
@@ -245,11 +278,78 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  AppBar _appBar() {
+    double width = MediaQuery.of(context).size.width;
+    return AppBar(
+      title: Row(
+        children: [
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeIn,
+            width: !_isSearch ? width - 80 : 0,
+            child: const Text("MoMovie"),
+          ),
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeIn,
+            width: _isSearch ? width - 32 : 0,
+            child: TextFormField(
+              maxLines: 1,
+              textInputAction: TextInputAction.search,
+              controller: _cSearch,
+              enabled: _isSearch,
+              textCapitalization: TextCapitalization.words,
+              keyboardType: TextInputType.text,
+              onFieldSubmitted: (s) => _onSearch(),
+              decoration: InputDecoration(
+                hintText: "Search",
+                hintStyle: const TextStyle(color: Colors.white),
+                prefixIcon: _isSearch
+                    ? IconButton(
+                        onPressed: _onSearch,
+                        icon: const Icon(
+                          Icons.search,
+                          color: Colors.white,
+                        ),
+                      )
+                    : null,
+                suffixIcon: _isSearch
+                    ? IconButton(
+                        onPressed: () => setState(() {
+                          _isSearch = false;
+                        }),
+                        icon: const Icon(
+                          Icons.close,
+                          color: Colors.white,
+                        ),
+                      )
+                    : null,
+              ),
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeIn,
+          width: _isSearch ? 0 : 48,
+          child: IconButton(
+            onPressed: () => setState(() {
+              _isSearch = true;
+            }),
+            icon: const Icon(Icons.search),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _stateView() {
-    if (_onLoadNowPlaying &&
-        _onLoadTopRated &&
-        _onLoadPopular &&
-        _onLoadUpcoming) {
+    if (_isLoadNowPlaying &&
+        _isLoadTopRated &&
+        _isLoadPopular &&
+        _isLoadUpcoming) {
       return Center(
         child: SpinKitWaveSpinner(
           color: AppColor.primaryLight,
@@ -294,7 +394,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _nowPlayingView() {
     String title = "🎬 Now Playing";
-    if (_onLoadNowPlaying) {
+    if (_isLoadNowPlaying) {
       return _sectionView(
         title: title,
         child: Center(
@@ -371,7 +471,7 @@ class _HomePageState extends State<HomePage> {
                     curve: Curves.easeIn,
                   ),
                   child: AnimatedContainer(
-                    duration: const Duration(microseconds: 200),
+                    duration: const Duration(milliseconds: 200),
                     height: 8,
                     width: _iNowPlaying == i ? 32 : size,
                     decoration: BoxDecoration(
@@ -390,7 +490,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _popularView() {
     String title = "🔥 Popular";
-    if (_onLoadPopular) {
+    if (_isLoadPopular) {
       return _sectionView(
         title: title,
         child: Center(
@@ -453,7 +553,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _topRatedView() {
     String title = "🎖️ Top Rated";
-    if (_onLoadTopRated) {
+    if (_isLoadTopRated) {
       return _sectionView(
         title: title,
         child: Center(
@@ -516,7 +616,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _upcomingView() {
     String title = "📝 Upcoming";
-    if (_onLoadUpcoming) {
+    if (_isLoadUpcoming) {
       return _sectionView(
         title: title,
         child: Center(
