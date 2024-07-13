@@ -59,7 +59,7 @@ class _AppState extends State<App> {
         home: Stack(
           children: [
             AnnotatedRegion<SystemUiOverlayStyle>(
-              value: SystemUiOverlayStyle.dark,
+              value: SystemUiOverlayStyle.light,
               child: MaterialApp(
                 localizationsDelegates: AppLocale.shared.delegates,
                 supportedLocales: AppLocale.shared.supports,
