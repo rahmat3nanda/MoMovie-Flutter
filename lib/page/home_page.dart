@@ -280,7 +280,7 @@ class _HomePageState extends State<HomePage> {
                         curve: Curves.easeIn,
                         child: SearchPage(
                           query: _qSearch,
-                          loadingBuilder: (b) => setState(() {
+                          showLoading: (b) => setState(() {
                             _showLoading = b;
                           }),
                         ),
