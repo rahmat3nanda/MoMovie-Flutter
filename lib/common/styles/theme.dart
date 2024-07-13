@@ -16,7 +16,7 @@ class AppTheme {
         appBarTheme: AppBarTheme(
           centerTitle: false,
           elevation: 0,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.black,
           foregroundColor: AppColor.primary,
           surfaceTintColor: Colors.transparent,
           titleTextStyle: GoogleFonts.poppins(
